@@ -66,7 +66,18 @@ button to open the side modal, select an App, click **Transfer to...** to procee
 user you want to transfer the App to, and hit **Transfer Ownership**.
 
 ## Team Account
-If you want to share Apps, Dashboards, etc. with others, or use Sematext as a team or company, we recommend creating one account that is not tied to any individual's email.  Instead, if you have a group/team email such as dev@... or engineering@... or monitoring@... or even sematext@... at your organization, we suggest you sign up with that email and then invite to that account everyone else who needs to be able to access Apps, Dashboards, Alert Rules, etc. in that account.  This way all assets created in Sematext remain in this team account and when individuals leave the company their access to this account can easily be removed with just a few clicks.
+If you want to share Apps, Dashboards, etc. with others, or use Sematext as a team or company, we recommend creating one account that is not tied to any individual's email.  Instead, if you have a group/team email such as dev@... or engineering@... or monitoring@... or even sematext@... at your organization, we suggest you sign up with that email and then invite to that account everyone else who needs to be able to access Apps, Dashboards, Alert Rules, etc. in that account.  
+
+### Team Account Benefits
+Team account doesn't cost any money. It's completely free. The benefits of a Team account:
+
+* Single, centralized place for all your team's Sematext assets (e.g. Apps, Dashboards, Alert Rules, payment information, plan management, access roles, etc.)
+* It is easy to invite teammates and, more importantly, remove them from the team account when they leave the organization
+* Longer lifetime.  When an invidual leaves an organization their email typically stops working after a while.  If your team has their Sematext assets in that individual's Sematext account you can imagine that's not really ideal.
+
+If you are using an internal group email, you need to allow posting by non-members or from an email that's not your organization's email in order to be able to receive emails from Sematext. In Google Suite, you can enable this from Groups --> Settings page.
+
+![Google Group Settings](../images/team/team-account-google-group-settings.png)
 
 ## Converting to Team Account
 If you've set up Apps, Alert Rules, etc. in your own account and would like to convert it to a Team Account the process is very simple.  Changing the ownership of the account can be done with the [Convert to Team Account](https://apps.sematext.com/ui/account/convert-to-team-account) ([EU](https://apps.eusematext.com/ui/account/convert-to-team-account)) feature. By converting your account to a Team Account everything in your account will be transferred to the Team Account - Apps, Alert Rules, Dashboards, Payment Method, etc.  To start the conversion, go to [General Settings](https://apps.sematext.com/ui/account/info) ([EU](https://apps.eu.sematext.com/ui/account/info)) and press the Convert to Team Account button.
@@ -75,10 +86,12 @@ If you've set up Apps, Alert Rules, etc. in your own account and would like to c
 
 You will have a chance to review what will be transferred to a new Team Account. In the second step, you will be prompted to insert the new team account email. In the third step, you will be able to edit existing team members and their roles in the new Team Account, or even completely remove their access to that account. Finally, in the fourth step you will see an overview of all changes and the chance to initiate the conversion. Once the conversion is initiated, you will be logged out of your own Sematext account. You will then be able to use your old credentials to log in as a member of the new Team Account.
 If there is anything in your account that you do not wish to have in the Team Account it needs to be deleted from your account first.  
-After the conversion is done, your account with the old email login will be completely empty but you will have access to the Team Account and will be able to switch into it.
 
 ![Convert To Team Account Form](../images/team/convert_to_team_account.png)
 
+After the conversion is done, your account with the old email login will be completely empty and you will be logged out. In order to switch to the team account, login with your individual account email and then switch into the team account.
+
+![Switch To Team Account Form](../images/team/switch-to-team-account.png)
 
 ## Typical use of Roles in an Organization or Team
 Typically you might have one person create an account by [signing up](https://apps.sematext.com/ui/registration). 

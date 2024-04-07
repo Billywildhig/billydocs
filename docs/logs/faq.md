@@ -23,13 +23,17 @@ logs.
 
 ### We are getting "Too many fields present in the index". What does that mean and how can we fix it?
 
-This means you have more than the allowed number of distinct fields in your Logs App.  To manually remove some fields use the Field Editor, but if you continue shipping logs with fields you've removed via Field Editor those fields will be recreated.
+This means you have more than the allowed number of distinct fields in your Logs App.  To manually remove some fields use the [Field Editor](https://sematext.com/docs/logs/fields/#field-editor), but if you continue shipping logs with fields you've removed via Field Editor those fields will be recreated.
 
-Some reasons why this may happen and how to address it:
+To prevent unwanted fields to be created you can exclude them with [Logs Pipelines](https://sematext.com/docs/logs/pipelines/). 
 
-* You have a high number of different types of log events with different sets of fields, maybe from different sources.  You may want to [consider using multiple Logs Apps](https://sematext.com/docs/logs/faq/#i-have-multiple-log-sources-should-i-send-them-all-to-the-same-logs-app) in such cases.  You can [ship logs from different sources to different Logs Apps](https://sematext.com/docs/logagent/faq/#how-do-i-ship-logs-to-multiple-destinations-sematext-logs-apps), [ship logs to different Logs Apps based on the matching patterns](https://sematext.com/docs/logagent/faq/#how-do-i-ship-logs-that-match-different-patterns-to-different-destinations-sematext-logs-apps)), or use [grep plugin](/logagent/input-filter-grep/) to [drop logs that match a certain pattern](https://sematext.com/docs/logagent/faq/#how-do-i-drop-logs-that-match-a-certain-pattern).
+* You can use Drop Processor to drop unwanted log events that match a specific condition.
+* You can use Remove Fields Processor to drop nested fields that contain redundant data.
+* You have many different deeply nested fields (e.g. foo.bar.bar, foo.bar.bam, etc.), perhaps because you log "objects" with attributes.  Often times you don't want all attributes to turn into individual fields. You can use Rename Fields Processor to extract useful information from a nested field and then use Remove Fields Processor to drop the nested field.
 
-* You have many different deeply nested fields (e.g. foo.bar.bar, foo.bar.bam, etc.), perhaps because you log "objects" with attributes.  Often times you don't want all attributes to turn into individual fields.  If you are using [Logagent](/logagent) you can use REMOVE_FIELDs or [remove-fields output filter](/logagent/output-filter-removefields/) to remove fields.
+See [Pipeline Processsors](https://sematext.com/docs/logs/processors-overview/) for more info.
+  
+If you have a high number of different types of log events with different sets of fields, maybe from different sources.  You may want to [consider using multiple Logs Apps](https://sematext.com/docs/logs/faq/#i-have-multiple-log-sources-should-i-send-them-all-to-the-same-logs-app) in such cases.
 
 ### What is @timestamp field?
 
@@ -42,7 +46,7 @@ From the application, click the `App Actions` button and select
 `Usage`. There's also `Settings` button next to [any of your Logs apps](https://apps.sematext.com/ui/logs) in
 the `Logs > All Logs Apps` section in our centralized logging and monitoring management solution.
 
-<a href="#logging-usage-menu"><img alt="Logs App Usage Menu" src="../../images/logs/logging-usage-menu.png" title="Logs App Usage Menu"></a>
+<img alt="Logs App Usage Menu" src="../../images/logs/logging-usage-menu.png" title="Logs App Usage Menu">
 
 On click, `App Settings > Usage` page will present both Total Volume in Gb and Total Count of indexed logs for that particular Logs App.
 
@@ -56,8 +60,7 @@ The number of logs will be also displayed in the right corner of the Log Counts 
 
 <img alt="Logs App Log Count" src="../../images/logs/logging-app-logs-count.png" title="Logs App Log Count">
 
-You can also do that from Kibana
-by searching for all your logs without adding any time filters. The
+You can also do that from Kibana by searching for all your logs without adding any time filters. The
 number of hits represents the number of all your logs.
 
 ### How long are my logs stored?
@@ -122,7 +125,7 @@ application is using the *Basic* plan, our logging management platform will acce
 KB in size. If your application is using the *Standard* plan, it
 will allow logs up to 128 KB. If your application is using the *Pro*
 plan, it will accept logs up to 256 KB in size. If your logs are
-larger than the mentioned limits, please consider using the *Enterprise*
+larger than the mentioned limits, please consider using the *Pro*
 plan.
 
 ### My logs have special structure.  Can Logs App handle that?
@@ -484,10 +487,6 @@ Logs App runs and stores data in Amazon AWS in the US and the EU.  You can choos
 
 ## Kibana
 
-### Can I use my own Kibana?
-
-Yes.
-
 ### How can I get a nice map of the world in Kibana?
 
 Ensure you have a country field in your logs.  If you only have IP you
@@ -682,23 +681,3 @@ Yes. Our centralized logging management solution lets one configure arbitrary We
 event information when Alert events are triggered. See [alerts FAQ](/faq#alerts) for more info.
 
 
-<div id="logging-usage-menu" class="modal" role="dialog" aria-labelledby="Logs App Usage Menu" aria-describedby="Logs App Usage Menu">
-  <div class="modal-content">
-    <div class="header">
-      <a href="#" id="close">
-        <div class="box box3">
-          <svg viewBox="0 0 40 40">
-					    <path class="close-x" d="M 10,10 L 30,30 M 30,10 L 10,30"></path>
-					  </svg>
-        </div>
-      </a>
-      <h2>Logs App - Usage Menu Link</h2>
-    </div>
-    <div class="copy">
-      <img alt="Logs App Usage Menu" src="../../images/logs/logging-usage-menu.png" title="Logs App Usage Menu">
-    </div>
-  </div>
-  <a href="#">
-    <div class="overlay"></div>
-  </a>
-</div>

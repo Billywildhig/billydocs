@@ -312,13 +312,7 @@ this is not needed, but one needs to add the Sematext Agent to the Java
 command-line and restart the process of the monitored application. When
 running Standalone monitor one can update the App Agent without
 restarting the Java process being monitored, while a restart is needed
-when the Embedded App Agent is being used. To be able to [trace transactions](../tracing)
-or [database operations](../tracing/database-operations) you need to use the
-Embedded App Agent.
-
-### Can I use Sematext for (business) transaction tracing?
-
-Yes, see [Transaction Tracing](../tracing).
+when the Embedded App Agent is being used.
 
 ### Can I move Sematext Agent to a different directory?
 
@@ -381,8 +375,11 @@ See [enabling Security Manager permissions](../agents/sematext-agent/jmx-attachi
 
 ### Can I reconfigure the agent to send metrics to a different Monitoring App?
 Yes, this is how:
+
 - If you are using automonitoring via [autodiscovery](../monitoring/autodiscovery/) just change the App in the UI
+
 Otherwise:
+
 - In /opt/spm/spm-monitor/conf directory look for a .properties file whose name contains the token of the Monitoring App where the metrics are being sent
 - Rename this file, replacing the App token part with the token of the Monitoring App where you want the agent to send metrics
 - If in-process agent is used also change the token in the javaagent definition in the startup script of the monitored service
@@ -403,21 +400,7 @@ See info about user roles in [sharing FAQ](../faq/#sharing).
 
 ### Is there an Ansible Playbook for the Sematext Agent?
 
-Yes, see the
-[Install](https://galaxy.ansible.com/sematext/spm-monitor-install/)
-and
-[Configure](https://galaxy.ansible.com/sematext/spm-monitor-config/)
-playbooks, with examples.
-
-### Is there a Puppet Module for the Sematext Agent?
-
-Yes, see the Install and
-Configure [module](https://forge.puppet.com/sematext/spm_monitor),
-with examples.
-
-### Is there a Chef Recipe for the Sematext Agent?
-
-Yes, see [Sematext Agent Chef Recipe](../agents/sematext-agent/chef-recipe) example.
+Yes, see the [Ansible instructions](../agents/sematext-agent/ansible) for installing Sematext Agent in multiple hosts.
 
 ## Agent Updating
 
@@ -730,6 +713,26 @@ After that, you should be able to add the key to your system.
 ```bash
 wget -O - https://pub-repo.sematext.com/debian/sematext.gpg.key | sudo apt-key add -
 ```
+
+### How to prevent "Pending" status when installing Sematext Agent on a Kubernetes Cluster?
+
+If you notice that the pods for Sematext Agent are stuck in a "Pending" status with an error similar to "Port is already in use" during the installation on your Kubernetes Cluster, it might be related to `hostNetwork` setting. 
+
+Sematext Agent requires `hostNetwork` access in order to access and monitor the Kubernetes control plane components. However, if you enable `hostNetwork` and the default port (8675) is already being used on your host, it can result in the Sematext Agent pods remaining in a "Pending" state. To resolve this problem, you need to modify the port being used.
+
+If you have concerns about `hostNetwork` usage or you don't want to use it in your system, please refer to [this page](https://sematext.com/docs/agents/sematext-agent/kubernetes/hostnetwork/).
+
+If you want to proceed with `hostNetwork` (which is required for fully featured Kubernetes monitoring), please follow the steps below, depending on the installation method you are using:
+
+**kubectl Installation**
+
+Update the `API_SERVER_PORT` environment variable with the new `<Free-Port>` value in your YAML file. The new `<Free-Port>` value should be a port that is not in use. Additionally, make sure to update the port values for `livenessProbe`, `startupProbe`, and `ports` accordingly, using the same `<Free-Port>` value.
+
+**Helm Installation**
+
+Include the following parameter in your regular helm installation command: `--set agent.service.port=<Free-Port>`. Replace `<Free-Port>` with a port that is not in use.
+
+By following these instructions, you should be able to avoid the "Pending" status and successfully install Sematext Agent on your Kubernetes Cluster.
 
 ### How do I create the diagnostics package?
 
@@ -1070,6 +1073,11 @@ Note:
     <https://apps.sematext.com/ui/monitoring>, click Actions \> Install
     Monitor on app you are installing)
 
+## Plans & Pricing
+
+How much does your monitoring solution cost? Do you offer different plans?
+Check the [Infra Monitoring and Service Monitoring Pricing](https://sematext.com/pricing/#infrastructure).
+
 ## Billing
 
 ### How do you bill for infrastructure and server monitoring?
@@ -1115,7 +1123,7 @@ monitored by Sematext are metered as separate hosts. In other words, whether
 the monitored application is running in a container or in a VM or
 directly on a server or in a public cloud instance is the same as far as
 metering and billing is concerned. For plans and price details
-see <https://sematext.com/spm/pricing>.
+see <https://sematext.com/pricing/>.
 
 Containers are monitored and charged through Infra Apps which can also monitor
 your bare-metal servers and virtual machines.

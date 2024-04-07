@@ -1,154 +1,199 @@
-title: Kubernetes Monitoring Integration
+title: Kubernetes Monitoring with Sematext
 description: Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation. To start monitoring Kubernetes with Sematext, you only need to install a tiny agent that adds basically no CPU or memory overhead.
 
 Kubernetes is a portable, extensible, open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation. To start monitoring Kubernetes with Sematext, you only need to install a tiny agent that adds basically no CPU or memory overhead.
 
+If you are new to Sematext's Kubernetes Monitoring, the following 4 minute video is a good way to get a sneak-peak.  Note that it's from late 2023 and our Kubernetes monitoring is constantly evolving and improving.
+
+<div class="video_container">
+<iframe src="https://www.youtube.com/embed/5bJF5HX6u40"
+frameborder="0" allow="autoplay; encrypted-media" 
+allowfullscreen class="video"></iframe>
+</div>
+
 ## Monitoring Kubernetes with Sematext
 
-Sematext Monitoring will give you detailed insights into your cluster’s health, performance metrics, resource counts amongst other important metrics. Speaking of metrics, check out [this ](https://sematext.com/docs/agents/sematext-agent/kubernetes/metrics/)page for a summarized list of the key metrics you can follow with Sematext as well as a short explanation for each one of them.
+Sematext Monitoring will provide you with detailed insights into your cluster's control plane components and their health, performance metrics, and resource counts, among other important metrics. Speaking of metrics, you can check out [this page](https://sematext.com/docs/agents/sematext-agent/kubernetes/metrics/) for a summarized list of key metrics that you can track using Sematext. It also includes a short explanation for each metric.
 
+![alt_text](https://sematext.com/wp-content/uploads/2023/10/k8s-overview.png "Sematext Kubernetes Monitoring")
 
+### Agent Install
+To start monitoring Kubernetes with Sematext install the Sematext Agent. Setting up the agent takes less than 5 minutes:
 
+1.  Create a new Infra App in [Sematext Cloud US](https://apps.sematext.com/ui/monitoring-create) (or  [Sematext Cloud Europe](https://apps.eu.sematext.com/ui/monitoring-create)) by choosing the INFRA App card from the list of integrations.
+2.  Name your Infra App, select the Kubernetes environment and install the Sematext Agent based on your preferred installation method. Available options include kubectl and a Helm chart.
 
-![alt_text](https://sematext.com/wp-content/uploads/2020/03/Kubernetes-Pod-Overview.png "Sematext Monitoring")
-
-
-
-### Helm Chart
-
-To start monitoring Kubernetes with Sematext install the Sematext Agent. The easiest way to do that is with a Helm chart. It’s available in the official charts repo and it will install to all nodes in your cluster. To install it run the following command:
-
-
-
-
-```
-helm install --name sematext-agent \
-  --set infraToken=<YOUR_INFRA_TOKEN> \
-  --set logsToken=<YOUR_LOGS_TOKEN> \
-  --set region=<"US" or "EU"> \
-  stable/sematext-agent
-```
-
-
-
-Check out [github](https://github.com/helm/charts/blob/master/stable/sematext-agent/README.md) for more details.
-
-
-### Sematext Operator
-
-You can also install Sematext Operator using this command:
-
-
-
-
-```
-kubectl apply -f https://raw.githubusercontent.com/sematext/sematext-operator/master/bundle.yaml
-```
-
-
-
-
-After the installation has finished you can create the SematextAgent resource that deploys the agent to all the nodes in your cluster.
-
-
-
-
-```
-apiVersion: sematext.com/v1alpha1
-kind: SematextAgent
-metadata:
-  name: sematext-agent
-spec:
-  region: <"US" or "EU">
-  logsToken: YOUR_LOGS_TOKEN
-  infraToken: YOUR_INFRA_TOKEN
-```
-
-
-
-For those looking for a more hands-on approach, there’s a [manual installation procedure](https://sematext.com/docs/agents/sematext-agent/kubernetes/installation/#manual-installation) with `kubectl`.
+### Agent Configuration
+The Sematext Agent offers a versatile container engine monitoring and visibility solution that is easy to customize. For more information, please refer to our [Agent Configuration for Kubernetes](https://sematext.com/docs/agents/sematext-agent/kubernetes/configuration/).
 
 
 ## Shipping Kubernetes logs to Sematext
 
+Due to its nature, Kubernetes can be difficult to debug and without proper tooling this process will take a lot longer than it has to. Sematext helps you shed light on what caused issues with your Kubernetes cluster by collecting Kubernetes logs and events.
 
-Due to its nature, Kubernetes can be difficult to debug and without proper tooling this process will take a lot longer than it has too. Sematext helps you shed light on what caused the anomaly that led to the crash.
+All you need to do is use [Discovery](../logs/discovery/setup) to Set Up log shipping:
 
+<img class="content-modal-image" alt="Kubernetes logs - Discovery" src="../../images/integrations/kubernetes-logs-disco.png" title="Kubernetes logs - Discovery">
 
+Once data is in, you can explore it via the built-in reports:
 
-
-
-![alt_text](https://sematext.com/docs/images/logs/logsene-ui.png "Sematext Logs")
-
-
-To configure Kubernetes log shipping we’re going to use Helm.
-
-
-### Helm
-
-To install Logagent with Helm you’ll need to run the following command:
-
-```
-
-helm install st-logagent \
-  --set logsToken=<YOUR_LOGS_TOKEN> \
-  --set region=<US or EU> \
-  stable/sematext-agent
-```
-
-Deleting Logagent can be done with:
-
-```
-
-helm delete st-logagent
-
-```
-
+<img class="content-modal-image" alt="Kubernetes logs" src="../../images/integrations/kubernetes-logs.png" title="Kubernetes logs">
 
 If you are looking to use a different type of integration you can check out this [page](https://sematext.com/docs/logagent/installation-docker/#kubernetes-and-openshift).
 
+Sematext also provides a Kubernetes Audit logs receiver endpoint. Check out [Kubernetes Audit Logs Integration](https://sematext.com/docs/integration/kubernetes-audit-integration/) for detailed instructions on shipping Kubernetes audit logs.
 
-## Kubernetes Metrics
+## Kubernetes Events
 
-Container and Kubernetes metrics are collected along with labels and tags, which are exposed in the UI to allow slicing and dicing and building of custom dashboards.
+Kubernetes events track a wide range of activities within a Kubernetes cluster, making them really important in monitoring and troubleshooting the cluster's health and reliability. They provide detailed information about the state and behavior of resources in the cluster, such as pods, nodes, services, and other objects. That's why you can find these events both in the Kubernetes overview and in a dedicated Events report.
+
+In the top-right corner of the Kubernetes overview, you’ll find a chart with the distribution of all Kubernetes events, coloured by severity, within your selected time range. This is really useful to quickly pinpoint when an incident happened.
+
+<img class="content-modal-image" alt="Kubernetes Events Overview" src="../../images/integrations/k8s-overview-events.png" title="Kubernetes Events Overview">
+
+In Kubernetes Events you can explore and filter all the events received within the selecting time range. They are also color-coded by severity and you can quickly see the event message, the available event tags (fields) and the Infra App name to which they belong. Each event can be expanded to get all the details, nicely structured based on all available event tags and their respective values. 
+
+<img class="content-modal-image" alt="Kubernetes Events" src="../../images/integrations/k8s-events-screen.png" title="Kubernetes Events">
+
+In the expanded view, you can filter the events by each individual tag value, whether to include or exclude it.
+
+For additional information about Kubernetes events tags, please refer to our [Common Schema](https://sematext.com/docs/tags/common-schema/#kubernetes-event-tags).
+
+If desired, the [Sematext Agent can be configured](https://sematext.com/docs/agents/sematext-agent/kubernetes/events/) to exclude a number of Kubernetes events.
 
 
-### Pod Metrics
+## Important Kubernetes Metrics
+
+Below you can find a list of the most important Kubernetes metrics to monitor. For a complete list of all the supported metrics, please refer to our dedicated [Kubernetes Metrics](https://sematext.com/docs/agents/sematext-agent/kubernetes/metrics/) page.
 
 
+### Control Plane Metrics
 
-*   Pod count - The total nodes in the cluster
-*   Pod restarts - The total number of pods scheduled across nodes
-*   Containers count - The total number ofcontainers
-*   Succeeded pods - The number of pods that are successfully scheduled
-*   Failed pods - The number of failed pods
-*   Unknown pods - The number of pods that are in unknown state
-*   Pending pods - The number of pods in pending state
-*   Running pods - Reflects the current number of running pods
+#### API Server
+
+* Request Latency - Measures the time taken to process API server requests
+* Request Throughput - Tracks the number of API server requests processed per unit of time
+* Error Rate - Monitors the rate of API server errors
+
+<img class="content-modal-image" alt="API Server Requests" src="../../images/integrations/kubernetes-apiserver-requests.png" title="API Server Requests">
+
+<img class="content-modal-image" alt="API Server Auth" src="../../images/integrations/kubernetes-apiserver-auth.png" title="API Server Auth">
+
+#### CoreDNS
+
+* DNS Request Latency - Measures the time taken to process DNS requests by CoreDNS
+* DNS Local and Remote Cache Misses - Counts the number of cache misses for DNS queries in CoreDNS's local or remote cache.
+* Error Rate - Monitors the rate of DNS errors encountered by CoreDNS
+
+<img class="content-modal-image" alt="CoreDNS Overview" src="../../images/integrations/kubernetes-coredns-overview.png" title="CoreDNS Overview">
+
+<img class="content-modal-image" alt="CoreDNS Cache" src="../../images/integrations/kubernetes-coredns-cache.png" title="CoreDNS Cache">
+
+#### etcd
+
+* Leader Changes - Tracks the number of times the etcd cluster leadership changes
+* Disk Space Usage - Monitors the amount of disk space used by etcd
+* WAL Write Latency - Measures the latency of write operations to the etcd Write-Ahead Log (WAL)
+* WAL Snapshot Latency - Measures the latency of taking snapshots of the etcd Write-Ahead Log (WAL)
+* WAL Commit Latency - Measures the latency of committing changes from the etcd Write-Ahead Log (WAL) to the database
+
+<img class="content-modal-image" alt="etcd overview" src="../../images/integrations/kubernetes-etcd-overview.png" title="etcd overview">
+
+<img class="content-modal-image" alt="etcd mvcc" src="../../images/integrations/kubernetes-etcd-mvcc.png" title="etcd mvcc">
+
+#### kube-proxy
+
+* Service Changes - Tracks the number of changes in services detected by kube-proxy
+* Endpoint Changes - Tracks the number of changes in endpoints detected by kube-proxy
+* Synchronization of Proxy Rules - Measures the time taken to synchronize proxy rules for services
+* Request Latency by Host, HTTP Method, Path - Measures the latency of requests proxied by kube-proxy, categorized by host, HTTP method or Path
+
+<img class="content-modal-image" alt="kube-proxy overview" src="../../images/integrations/kubernetes-kubeproxy-overview.png" title="kube-proxy overview">
+
+<img class="content-modal-image" alt="kube-proxy sync proxy rules" src="../../images/integrations/kubernetes-kubeproxy-syncproxyrules.png" title="kube-proxy sync proxy rules">
+
+#### Scheduler
+
+* Scheduling Latency by Attempts - Measures the scheduling latency for pods based on the number of attempts made
+* Failed Scheduling Attempts - Monitors the number of failed pod scheduling attempts
+* Queued Pods by Queue - Tracks the number of pods currently in the scheduler's queue, categorized by the queue name
+* Unschedulable Pods - Tracks the number of pods that cannot be scheduled due to resource constraints
+
+<img class="content-modal-image" alt="scheduler overview" src="../../images/integrations/kubernetes-schedulers-overview.png" title="scheduler overview">
+
+<img class="content-modal-image" alt="scheduler latency" src="../../images/integrations/kubernetes-schedulers-latency.png" title="scheduler latency">
 
 
+### Workload Metrics
+
+#### Pods
+
+* Pod count - The total nodes in the cluster
+* Pod restarts - The total number of pods scheduled across nodes
+* Containers count - The total number ofcontainers
+* Succeeded pods - The number of pods that are successfully scheduled
+* Failed pods - The number of failed pods
+* Unknown pods - The number of pods that are in unknown state
+* Pending pods - The number of pods in pending state
+* Running pods - Reflects the current number of running pods
 
 ![alt_text](https://sematext.com/wp-content/uploads/2020/04/image2.png "Sematext Kubernetes Metrics")
 
+#### Deployments
 
+* Current replicas - The number of active deployment replicas
+* Available replicas - The number of pod instances targeted by the deployment
+* Desired replicas - The number of non-terminated pods targeted by the deployment that have the desired template specification
 
-### Deployment
+![alt_text](https://sematext.com/wp-content/uploads/2023/10/k8s-workloads-deployments.png "Sematext Kubernetes Deployments")
 
+#### DaemonSets
+* Available DaemonSets - Number of nodes that should be running the daemon pod and have one or more of the daemon pod running and ready
+* Scheduled DaemonSets - Number of nodes that are running at least one daemon pod and are supposed to run the daemon pod
+* Desired DaemonSets - Number of nodes that should be running the daemon pod (including nodes correctly running the daemon pod)
 
+![alt_text](https://sematext.com/wp-content/uploads/2023/10/k8s-workloads-daemonsets.png "Sematext Kubernetes DaemonSets")
 
-*   Current replicas - The number of active deployment replicas
-*   Available replicas - The number of pod instances targeted by the deployment
-*   Desired replicas - The number of non-terminated pods targeted by the deployment that have the desired template specification
+#### StatefulSets
+* Desired Replicas - Number of desired replicas
+* Current Replicas -  Number of Pods created by the StatefulSet controller from the StatefulSet version indicated by currentRevision
+* Ready Replicas - Number of Pods created by the StatefulSet controller that have a Ready Condition
 
+![alt_text](https://sematext.com/wp-content/uploads/2023/10/k8s-workloads-statefulsets.png "Sematext Kubernetes StatefulSets")
 
+#### Jobs and CronJobs
+* Schedule - Cronjob schedule setup
+* Last Scheduled - Cronjob last time scheduled timestamp
+* Successful / Failed - Defines if the cronjob is successful or not
+* Suspended - Defines if the cronjob is suspended or not
+* Job Condition - Job finish condition, completed: 2, failed: 0 or suspended: 1
+* Job Executions - Number of job executions
+* Job Failures - Number of job failures
+* CronJob Name - Name of cronjob thata the job belongs to
 
-![alt_text](https://sematext.com/wp-content/uploads/2020/04/image6.png "Sematext Kubernetes Metrics")
+![alt_text](https://sematext.com/wp-content/uploads/2023/10/k8s-workloads-cronjobs.png "Sematext Kubernetes CronJobs")
 
+### CPU, Memory, Storage and Network Metrics
 
+#### CPU Metrics
 
-### Storage
+*   Cpu usage - The container CPU usage in %
+*   Throttled time - The total amount of time that processes have been throttled in the container cgroup
 
+![alt_text](https://sematext.com/wp-content/uploads/2020/04/CPU.png "Sematext Kubernetes Metrics")
 
+#### Memory Metrics
+
+*   Memory fail counter - The number of times that memory cgroup limit was exceeded
+*   Memory limit - Designates the max allowed memory limit for the container cgroup
+*   Memory pages in - The number of events each time the page is accounted to the container cgroup
+*   Memory pages out - The number of events each time a page is unaccounted from the container cgroup
+*   Memory pages fault - Represents the number of page faults accounted the cgroup
+*   Swap size - The number of bytes of swap usage
+
+![alt_text](https://sematext.com/wp-content/uploads/2020/04/ram.png "Sematext Kubernetes Metrics")
+
+#### Storage Metrics
 
 *   Read bytes - The number of bytes read from the disk
 *   Read time - The total amount of time (in nanoseconds) between read request dispatch and request completion
@@ -160,10 +205,7 @@ Container and Kubernetes metrics are collected along with labels and tags, which
 
 ![alt_text](https://sematext.com/wp-content/uploads/2020/04/image1.png "Sematext Kubernetes Metrics")
 
-
-
-### Network
-
+#### Network Metrics
 
 *   Received bytes - Received amount of bytes on the network interface
 *   Received packets - Received amount of packets on the network interface
@@ -176,131 +218,74 @@ Container and Kubernetes metrics are collected along with labels and tags, which
 
 ![alt_text](https://sematext.com/wp-content/uploads/2020/04/network.png "Sematext Kubernetes Metrics")
 
-### Memory
+
+## Kubernetes Alerts
+
+As soon as you create an Infra App, Sematext automatically creates a set of default alert rules based on pre-defined conditions in important Kubernetes metrics. That way you get notified when Pods are restarted, there are missing replicas in your Kubernetes deployments, etc. Below you can see a list of default alert rules for Kubernetes monitoring:
+
+- High CPU limit usage: Receive notifications when CPU limit usage is exceeded, preventing CPU overloads
+- CPU limit usage reached: Detect when CPU utilization is high and close to the CPU limits. Potentially the system will throttle the CPU usage when it is over the limit and we want to avoid that
+- High etcd leader change: Monitor leadership changes in your Kubernetes etcd cluster
+- Kubelet Volume Manager unavailable: Stay informed about issues with the Kubernetes kubelet volume manager
+- Kubelet Volume Manager “actual” value is zero: Receive alerts when the kubelet volume manager's “actual” value is zero
+- API Server 4XX errors: Detect 4XX errors in your Kubernetes API server
+- API Server 5XX errors: Be aware of 5XX errors in your Kubernetes API server
+- Node under pressure: Receive alerts when Kubernetes nodes are under excessive load
+- Node CPU capacity anomalous: Be alerted to unusual CPU capacity issues on Kubernetes nodes
+- Node memory capacity anomalous: Stay informed about memory capacity issues on Kubernetes nodes
+- Missing replicas for deployments: Detect missing replicas for your Kubernetes deployments
+- Missing Pod replica in StatefulSet: Get notified when pod replicas are missing in Kubernetes StatefulSets
+- Pod status is failed: Receive alerts when pods in Kubernetes are in a "failed" state
+- Pod status is unknown: Be alerted to pods in an "unknown" state in Kubernetes
+- Pod status is pending: Monitor pending pods in Kubernetes
+- Pod restart amount reached: Detect when pods are restarted beyond a specified threshold
+- Pod status is “CrashLoopBackOff”: Be alerted to pods in a "CrashLoopBackOff" state in Kubernetes
+- Pod status is “ImagePullBackOff”: Receive notifications when pods are in an "ImagePullBackOff" state in Kubernetes
+
+You can [create additional alerts](../alerts) on any metric.
+
+## Troubleshooting
+
+If you are having trouble sending metrics, try out the latest version of the [Sematext Agent](../agents/sematext-agent/installation/). Additionally, make sure to check out the [Agents Information panel](https://sematext.com/docs/fleet/#agent-information-panel) for any errors, and refer to our [Sematext Monitoring FAQ](https://sematext.com/docs/monitoring/spm-faq/) for useful tips.
+
+### Cluster Roles / RBAC Rules
+
+In case you have trouble getting data in Kubernetes Master Components reports (e.g. Kubelet, Scheduler, kube-proxy, Etcd, CoreDNS) or some of the Workloads reports (e.g. DaemonSets, StatefulSets), make sure that RBAC is enabled in your cluster. Also you'll need to update your RBAC rules configuration:
+
+**kubectl Installation**
+
+```
+kubectl apply -f https://sematext-installer.s3.amazonaws.com/sematext-clusterroles.yaml
+```
+
+**Helm Installation**
+
+```
+helm repo add sematext https://cdn.sematext.com/helm-charts
+helm repo update
+```
+
+Also, please make sure that your agent is [up to date](https://sematext.com/docs/monitoring/spm-faq/#agent-updating).
+
+### Why we need hostNetwork access and how to turn it off if desired
+Check out [our page about hostnetwork](https://sematext.com/docs/agents/sematext-agent/kubernetes/hostnetwork/).
+
+### Setting TLS Certificate Paths
+While monitoring Kubernetes master components, the Sematext Agent will automatically retrieve certificates from the host machine. 
+
+However, if the necessary paths are not present within the [common paths](https://kubernetes.io/docs/setup/best-practices/certificates/#certificate-paths), 
+some additional configuration will be needed to enable querying of the metrics endpoints.
+
+If the default TLS paths are not applicable, you can specify the correct paths using the [Kubernetes environment variables](https://sematext.com/docs/agents/sematext-agent/kubernetes/configuration/). 
+These configurations can be directly placed within the DaemonSet configuration as shown below:
+```yaml 
+          env:
+            - name: AUTODISCO_VECTOR_SERVICE_ACCOUNT
+              value: sematext-agent-vector
+              # ...
+            - name: KUBERNETES_KUBELET_KEY_PATH
+              value: "/some/custom/path"
+              # ...
+```
 
 
-*   Memory fail counter - The number of times that memory cgroup limit was exceeded
-*   Memory limit - Designates the max allowed memory limit for the container cgroup
-*   Memory pages in - The number of events each time the page is accounted to the container cgroup
-*   Memory pages out - The number of events each time a page is unaccounted from the container cgroup
-*   Memory pages fault - Represents the number of page faults accounted the cgroup
-*   Swap size - The number of bytes of swap usage
-
-![alt_text](https://sematext.com/wp-content/uploads/2020/04/ram.png "Sematext Kubernetes Metrics")
-
-
-### CPU
-
-
-*   Cpu usage - The container CPU usage in %
-*   Throttled time - The total amount of time that processes have been throttled in the container cgroup
-
-![alt_text](https://sematext.com/wp-content/uploads/2020/04/CPU.png "Sematext Kubernetes Metrics")
-
-## Metrics Fields
-
-|Name|Type|Unit|Numeric Type|Label|Description|
-|----|----|----|------------|-----|-----------|
-|kubernetes.pod.restarts|counter|ns|long|pod restarts|number of pod restarts|
-|kubernetes.pod.container.count|gauge|ns|long|container count|number of containers inside pod|
-|kubernetes.pod.count|gauge|ns|long|pod count|pod count which is always equal to one|
-|kubernetes.pod.count.succeeded|gauge|ns|long|succeeded pod count|equal to one if all containers inside pod have terminated in success|
-|kubernetes.pod.count.failed|gauge|ns|long|failed pod count|equal to one if all containers inside pod have terminated and at least one container has terminated in failure|
-|kubernetes.pod.count.unknown|gauge|ns|long|unknown pod count|equal to one if pod state can't be obtained|
-|kubernetes.pod.count.pending|gauge|ns|long|pending pod count|equal to one if the pod has been accepted by the scheduler and his containers are waiting to be created|
-|kubernetes.pod.count.running|gauge|ns|long|running pod count|equal to one if the pod has been scheduled on a node and at least one of his containers is running|
-|kubernetes.deployment.count|gauge|ns|long|deployment count|deployment count which is always equal to one|
-|kubernetes.deployment.replicas|gauge|ns|long|replica count|number of active replicas|
-|kubernetes.deployment.replicas.avail|gauge|ns|long|available replica count|number of available replicas. Replicas are marked as available if they are passing the health check|
-|kubernetes.deployment.replicas.desired|gauge|ns|long|desired replica count|number of desired replicas as defined in the deployment|
-|kubernetes.pvc.available|gauge|bytes|long|available bytes|number of available bytes in the volume|
-|kubernetes.pvc.used|gauge|bytes|long|used bytes|number of used bytes in the volume|
-|kubernetes.pvc.capacity|gauge|bytes|long|volume capacity|the capacity in bytes of the volume|
-|kubernetes.cluster.pod.count|gauge|ns|long|total pod count|number of pods in the cluster|
-|kubernetes.cluster.deployment.count|gauge|ns|long|total deployment count|number of deployments in the cluster|
-|kubernetes.cluster.node.count|gauge|ns|long|total node count|number of node comprising the cluster|
-
-## Sematext Agent
-
-The Sematext Agent offers a versatile container engine monitoring and visibility solution that is easy to customize.
-
-
-<table>
-  <tr>
-   <td><strong>Kubernetes Settings</strong>
-   </td>
-   <td>
-   </td>
-  </tr>
-  <tr>
-   <td>KUBERNETES_ENABLED
-   </td>
-   <td>Specifies if the Kubernetes monitoring functionality is active. Default value is <code>true</code>. To disable Kubernetes collector set <code>KUBERNETES_ENABLED=false</code>.
-   </td>
-  </tr>
-  <tr>
-   <td>KUBERNETES_EVENTS_NAMESPACE
-   </td>
-   <td>Designates a namespace for Kubernetes event watcher. By default all namespaces are watched for Kubernetes events and forwarded to event/log receivers.
-   </td>
-  </tr>
-  <tr>
-   <td>KUBERNETES_NAMESPACES
-   </td>
-   <td>Defines the comma separated list of namespaces that are queried for Kubernetes resources such as pods or deployments. By default all namespaces are fetched. You can adjust specific namespaces such as <code>KUBERNETES_NAMESPACES=default,kube-system</code>.
-   </td>
-  </tr>
-  <tr>
-   <td>KUBERNETES_INTERVAL
-   </td>
-   <td>Defines the collection interval for Kubernetes resources (default 10s)
-   </td>
-  </tr>
-  <tr>
-   <td>KUBERNETES_CLUSTER_ID
-   </td>
-   <td>Uniquely identifies the cluster where agent is deployed
-   </td>
-  </tr>
-  <tr>
-   <td>KUBERNETES_KUBELET_AUTH_TOKEN
-   </td>
-   <td>Specifies the path for account service token
-   </td>
-  </tr>
-  <tr>
-   <td>KUBERNETES_KUBELET_CA_PATH
-   </td>
-   <td>Determines the file path for the certificate authority utilized during TLS verification
-   </td>
-  </tr>
-  <tr>
-   <td>KUBERNETES_KUBELET_CERT_PATH
-   </td>
-   <td>Determines the file path for the certificate file utilized during TLS verification
-   </td>
-  </tr>
-  <tr>
-   <td>KUBERNETES_KUBELET_KEY_PATH
-   </td>
-   <td>Determines the file path for the private key utilized during TLS verification
-   </td>
-  </tr>
-  <tr>
-   <td>KUBERNETES_KUBELET_INSECURE_SKIP_TLS_VERIFY
-   </td>
-   <td>Indicates whether to skip TLS verification
-   </td>
-  </tr>
-  <tr>
-   <td>KUBERNETES_KUBELET_METRICS_PORT
-   </td>
-   <td>Specifies the port where kubelet Prometheus metrics are exposed (default 10250)
-   </td>
-  </tr>
-</table>
-
-
-You can find a complete list of **Environment Variables** available at this [link](https://sematext.com/docs/agents/sematext-agent/kubernetes/configuration/).
-
-Containers are discovered from **_cgroupfs _** and the metrics are fetched directly through **_cgroup _** controllers. Check out [this ](https://sematext.com/docs/agents/sematext-agent/containers/metrics/)page for a complete list of the metrics shipped by the Sematext Agent.

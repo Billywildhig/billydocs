@@ -79,6 +79,55 @@ _If you’re new here, read below for a high-level overview of Sematext._
 		</a>
 	</div>
 	<div class="mdl-cell mdl-cell--4-col">
+		<a href="/docs/dashboards/">
+			<div class="demo-card-event mdl-card mdl-shadow--2dp dashboards-card">
+				<div class="mdl-card__title mdl-card--expand custom-mdl-card">
+					<h4>
+						Dashboards
+					</h4>
+					<p>Add new reports or customize pre-built dashboards</p>
+				</div>
+			</div>
+		</a>
+	</div>
+ 	<div class="mdl-cell mdl-cell--4-col">
+		<a href="/docs/tags/">
+			<div class="demo-card-event mdl-card mdl-shadow--2dp tags-card">
+				<div class="mdl-card__title mdl-card--expand custom-mdl-card">
+					<h4>
+						Tags
+					</h4>
+					<p>For better filtering and grouping in dynamic infrastructures</p>
+				</div>
+			</div>
+		</a>
+	</div>
+ 	<div class="mdl-cell mdl-cell--4-col">
+		<a href="/docs/team/">
+			<div class="demo-card-event mdl-card mdl-shadow--2dp team-card">
+				<div class="mdl-card__title mdl-card--expand custom-mdl-card">
+					<h4>
+						Team
+					</h4>
+					<p>App vs. Account access, team account, inviting others, setting roles</p>
+				</div>
+			</div>
+		</a>
+	</div>
+        <div class="mdl-cell mdl-cell--4-col">
+		<a href="/docs/fleet/">
+			<div class="demo-card-event mdl-card mdl-shadow--2dp fleetdisco-card">
+				<div class="mdl-card__title mdl-card--expand custom-mdl-card">
+					<h4>
+						Fleet & Discovery
+					</h4>
+					<p>Agent fleet, discovery & automatic setup of services and logs</p>
+				</div>
+			</div>
+		</a>
+	</div>
+	<!--
+	<div class="mdl-cell mdl-cell--4-col">
 		<a href="/docs/tracing/">
 			<div class="demo-card-event mdl-card mdl-shadow--2dp tracing-card">
 				<div class="mdl-card__title mdl-card--expand custom-mdl-card">
@@ -90,13 +139,42 @@ _If you’re new here, read below for a high-level overview of Sematext._
 			</div>
 		</a>
 	</div>
+	-->
 </div>
 
+## Latest Updates
+Stay informed about the most recent developments in our product and agent releases.
+<div class="mdl-grid" style="padding:0;margin:-8px;">
+	<div class="mdl-cell mdl-cell--4-col">
+		<a href="https://sematext.com/product-updates/">
+			<div class="demo-card-event mdl-card mdl-shadow--2dp whats-new-card">
+				<div class="mdl-card__title mdl-card--expand custom-mdl-card">
+					<h4>
+						What's New?
+					</h4>
+					<p>Check the latest product updates</p>
+				</div>
+			</div>
+		</a>
+	</div>
+	<div class="mdl-cell mdl-cell--4-col">
+		<a href="./agents/sematext-agent/releasenotes/">
+			<div class="demo-card-event mdl-card mdl-shadow--2dp release-notes-card">
+				<div class="mdl-card__title mdl-card--expand custom-mdl-card">
+					<h4>
+						Agent Releases
+					</h4>
+					<p>Learn about the latest Sematext Agent features</p>
+				</div>
+			</div>
+		</a>
+	</div>
+</div>
 
 ## How Sematext works
 Sematext integrations let you collect metrics, logs and events across your whole stack from frontend to backend. Our solution goes beyond collecting metrics and detects anomalies, uncovers your slowest transactions, communication between servers and applications, etc.
 
-We include a fully integrated Kibana and expose an Elasticsearch API. Sematext works with all standard log shippers and agents you're already used to, such as syslog, Logstash, Fluentd, Filebeat, Vector, NXLog, log4j and many others, and integrates in minutes.
+We expose an Elasticsearch API. Sematext works with all standard log shippers and agents you're already used to, such as syslog, Logstash, Fluentd, Filebeat, Vector, NXLog, log4j and many others, and integrates in minutes.
 
 With Experience you can monitor your frontend or website performance and receive alerts when end-user experience is affected by performance. Sematext Experience provides invaluable insights that keep your business in control of how happy your customers are when interacting with your website or webapp.
 
@@ -238,6 +316,7 @@ Sematext provides over 100+ built-in integrations used to collect metrics from s
 We also provide you with easy to install Agents that collect data about your software and send it to Sematext.
 
 <div class="mdl-grid" style="padding:0;margin:0 -8px;">
+	<!--
 	<div class="mdl-cell mdl-cell--4-col">
 		<a href="./logagent/">
 			<div class="demo-card-event mdl-card mdl-shadow--2dp logagent-card">
@@ -249,6 +328,8 @@ We also provide you with easy to install Agents that collect data about your sof
 			</div>
 		</a>
 	</div>
+	-->
+	<!--
 	<div class="mdl-cell mdl-cell--4-col">
 		<a href="./agents/sematext-agent/containers/installation/">
 			<div class="demo-card-event mdl-card mdl-shadow--2dp docker-card">
@@ -260,6 +341,7 @@ We also provide you with easy to install Agents that collect data about your sof
 			</div>
 		</a>
 	</div>
+	-->
 	<div class="mdl-cell mdl-cell--4-col">
 		<a href="./agents/sematext-agent/">
 			<div class="demo-card-event mdl-card mdl-shadow--2dp kubernetes-card">

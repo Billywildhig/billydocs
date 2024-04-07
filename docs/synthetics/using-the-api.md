@@ -7,7 +7,7 @@ In addition to scheduled monitor runs, you can also trigger monitor runs by usin
 * Test the APIs, websites, and the user journeys in production immediately after deployment and alert when it fails.
 * Track and catch major changes in website metrics like page load time, page size, request count, 3rd Party API performance, etc introduced as part of code changes.
 
-Together with scheduled monitor runs, the API can also be used in the creation of HTTP and Browser monitors, both with and without a [User Journey script](user-journey-scripts). The create monitor API can be used to add multiple monitors in bulk using a script. The create monitor API can be used to:
+Together with scheduled monitor runs, the API can also be used in the creation of HTTP and Browser monitors, both with and without a [User Journey script](./user-journey-scripts/overview.md). The create monitor API can be used to add multiple monitors in bulk using a script. The create monitor API can be used to:
 
 * Create single HTTP and Browser monitors, with and without a User Journey script. 
 * Create multiple HTTP and Browser monitors at once.
@@ -44,7 +44,10 @@ The run monitor API can be triggered by sending an HTTP request with the below c
 ```
 
 ### Getting the apiKey
-*  Your account's  `<apiKey>` can be copied from the **Settings** -> **API** page.
+Your account's  `<apiKey>` can be copied from the **Settings** -> **API** page, which can be found:
+
+- [here](https://apps.sematext.com/ui/account/api), if your account is registered in the US region, or
+- [here](https://apps.eu.sematext.com/ui/account/api), for the EU region
 
 ### Getting the appId
 * The `<appId>` and `<monitorId>` values can be extracted from the URL of the **Monitor Overview** page. For example, if the **Monitor Overview** page URL is `https://apps.sematext.com/ui/synthetics/12345/monitors/276` then the `appId` is `12345` and `monitorId` is `276`.

@@ -12,7 +12,7 @@ question please email <support@sematext.com> or use our live chat in the bottom 
 Use a [Browser monitor](./browser-monitor.md) when you want to:
 
 * Monitor the performance of your web pages (page load time, web vitals, resource performance, and [many more metrics](./metrics/#browser-monitor-metrics))
-* Simulate and monitor [user journey/click path/web transactions](./user-journey-scripts.md) using a real browser
+* Simulate and monitor [user journey/click path/web transactions](./user-journey-scripts/overview.md) using a real browser
 * [Monitor SSL certificates](./ssl-certificate-monitoring.md) of your website
 
 Use an [HTTP monitor](./http-monitor.md) when you want to:
@@ -27,10 +27,13 @@ Yes. You can use [private agents](./private-locations.md) to monitor the endpoin
 If you do not want to run private agents yourself, you can also configure the firewall to allow the requests from Synthetics agents running in the cloud. Configure your firewall to allow HTTP requests with specific headers. All requests from HTTP Monitor will contain `x-sematext-origin: synthetics` in their headers. For Browser monitors, you can [configure](https://github.com/puppeteer/puppeteer/blob/main/docs/api/puppeteer.page.setrequestinterception.md) the script to include a custom header for all requests.
 
 ### Can I monitor API endpoints protected by OAuth authentication?
-No. The HTTP monitor does not support OAuth authentication before sending the actual request. HTTP monitor supports header-based authentication. 
+Yes. This can be done using an HTTP Monitor, please see [authentication](./http-monitor/#authentication). For Browser monitors, refer to the examples.
 
 ### Can I monitor API endpoints protected by Basic authentication?
-Yes. This can be done using an HTTP Monitor, please see [authentication](./http-monitor/#authentication).
+Yes. This can be done using an HTTP Monitor, please see [authentication](./http-monitor/#authentication). For Browser monitors, refer to the examples visible in the UI by clicking the *Browse Examples* button on the screen where User Journey scripts are edited.
+
+### Can I monitor API endpoints protected by NTLM authentication?
+Yes. This can be done using an HTTP Monitor, please see [authentication](./http-monitor/#authentication). For Browser monitors, refer to the examples visible in the UI by clicking the *Browse Examples* button on the screen where User Journey scripts are edited.
 
 ### Can I stop Synthetics Alerts during scheduled maintenance?
 Yes. You can temporarily disable the notifications from **Edit Configuration** -> **Configure Alerts** -> **Notifications**. Once the maintenance window is over, you can re-enable the notifications.
@@ -40,7 +43,14 @@ Yes. You can temporarily disable the notifications from **Edit Configuration** -
 ### Can I configure a monitor to alert only after N successive failures?
 Yes. You can update the below setting in **Edit Configuration** -> **Configure Alerts** -> **Notifications** to notify only when there are N consecutive failures from any location. The default value is 1.
 
-![Configure run failure count](../images/synthetics/synthetics-faq-notifications-2.png)
+![Configure run failure count](../images/synthetics/synthetics-faq-alert-after-N-times.png)
+
+### What is the difference between 'Consecutive Runs' and 'Alert after N Consecutive Failures' settings?
+The **Alert after N Consecutive Failures from a Specific Location** setting is located in the **Configure Alerts** -> **Notifications** tab. Its purpose is to withhold alerts until the monitor has failed N times consecutively before triggering an alert. 
+
+On the other hand, the **Consecutive Runs** setting can be found in the **General** tab. It won't consider the monitor as failed after N retry attempts, and the retries will occur immediately after the run fails, instead of waiting for the usual interval. Because the retried runs are not treated as failed, these two settings will thus affect the monitor's availability statistics differently.
+
+See [HTTP](./http-monitor/#configuration) or [Browser](./browser-monitor/#configuration) monitor configuration for more information on these settings.
 
 ### What are the default timeouts for HTTP & Browser monitors?
 The default timeouts for the monitors are covered in their respective documentation pages, in the run environment section:
@@ -52,7 +62,7 @@ The default timeouts for the monitors are covered in their respective documentat
 Yes. Please see [using the API](./using-the-api.md).
 
 ### Can I add monitors in bulk for monitoring multiple domains?
-Yes. This can be achieved by using a script with the API. Please see [using the API](./using-the-api.md#create-monitor-api).
+Yes. This can be achieved by using a [script with the API](./using-the-api.md#create-monitor-api) or by using the [add bulk monitors](./http-monitor/#bulk-monitors) feature for HTTP monitors.
 
 ### How are redirects handled?
 HTTP monitors don't follow redirects. If you think redirects should be followed please let us know.
@@ -71,7 +81,7 @@ Both HTTP and Browser monitor requests will have the string `SematextSyntheticsR
 You can find Browser monitor scripts for common use cases by selecting the **Browse Examples** button on the **Configure URL/Script** page while creating or editing a monitor. You can directly import a script from the example and change it to suit your needs. You can also find more examples [here](https://github.com/transitive-bullshit/awesome-puppeteer#examples).
 
 ### How can I securely store the credentials I supply to User Journey scripts?
-By adding them as Sensitive Data, on which you can find more information [here](./user-journey-scripts/#storing-your-user-journey-script-credentials-securely)
+By adding them as Sensitive Data, on which you can find more information [here](./user-journey-scripts/sensitive-data.md)
 
 ### Why is the latency reported by Browser monitors different from latency reported by HTTP monitors?
 Short answer: Because they are measuring somewhat different things.
@@ -136,7 +146,7 @@ Pass the extracted token to the next request in the request body
     body: await result.text()
   });
 ```
-To mask the passwords and other sensitive data you use for authentication please see [Storing User Journey script credentials securely](https://sematext.com/docs/synthetics/user-journey-scripts/#storing-your-user-journey-script-credentials-securely)
+To mask the passwords and other sensitive data you use for authentication please see [Storing User Journey script credentials securely](./user-journey-scripts/sensitive-data.md)
 
 ### Can I enforce same-origin policy for Browser monitors (CORS)?
 Yes. We keep this setting disabled by default, but you can choose to enforce it in the `Configure Options` tab while creating or editing your Browser monitors. The reason why you would potentially want to enable this is that it being disabled could keep your Browser monitors from working properly if your website requires strict CSP+CORS to be enabled.
@@ -144,8 +154,11 @@ Yes. We keep this setting disabled by default, but you can choose to enforce it 
 ### Why are some elements missing from my page during Browser monitor runs, even though they show up when I open it manually?
 Please see the `same-origin` question right above this one, this issue could very well be fixed by toggling the option to enforce `same-origin` policy on. Also make sure to double check from which locations you're using the monitor, as your website may display different content for different locations.
 
+### How do I avoid intermittent issues from affecting the availability of my monitors?
+The consecutive runs feature available in the **General** section for both HTTP and Browser monitors allows you to automatically run the monitor again after a failed run. Since the retried run will be run as soon as the failed run is reported, this can help avoid network errors or similar intermittent issues from affecting your overall availability, while still alerting you on issues which persist after multiple retries. Note that we reserve an extra 5% of the monitor's currently reserved runs per retry, with these extra runs being figured into the calculation at the bottom of the **General** page.
+
 ### How do I do X in a User Journey script?
-Please see the section on [User Journey script examples](./user-journey-scripts/#user-journey-script-examples).
+Please see the section on [User Journey script examples](./user-journey-scripts/examples.md).
 
 ### How are Web Vitals calculated when a User Journey script visits multiple pages?
 Web vitals are calculated only for the last page the User Journey script visits.
@@ -165,6 +178,17 @@ The *Cache-Control* HTTP header was introduced in HTTP 1.1. Systems using HTTP 1
 ```javascript
 'Pragma: no-cache'
 ```
+### Can I call GraphQL endpoints?
+Yes. You can call GraphQL endpoints with [HTTP Monitors](https://sematext.com/docs/synthetics/http-monitor/). In `General` tab pick the `Method Type` and enter the GraphQL endpoint. Set `Content-Type` to `application/json` from the Configure Requests --> Headers tab. 
+
+To send a `GET` request, set the query parameter from the `Query Params` tab.
+
+![GraphQL GET](../images/synthetics/synthetics-faq-graphql-get.png)
+
+To send a `POST` request, open the `Body` tab, set the content type to `JSON` and enter the query.
+
+![GraphQL POST](../images/synthetics/synthetics-faq-graphql-post.png)
+
 
 ## Sharing
 

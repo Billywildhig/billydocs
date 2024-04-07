@@ -11,7 +11,9 @@ The HTTP monitor sends a single HTTP request with its configured request setting
 * **HTTP Method** - HTTP Method.
 * **URL** - URL of the HTTP monitor of format `<http(s)>://hostname:port/path`.
 * **Interval** - Monitor execution interval.
+* **Consecutive Runs** - Reruns the monitor immediately after a failure, with the option to retry up to five times before marking the run as failed, thus preventing intermittent issues from producing false positive alerts or affecting monitor availability.
 * **Locations** - List of locations to run the monitor.
+* **[Scheduled Monitor Pauses](https://sematext.com/docs/synthetics/scheduled-pauses/)** - Specify one or more time periods a monitor should be paused
 
 ### Request Settings
 
@@ -41,23 +43,59 @@ If you disable this option, we **won’t save the response body** hence it **wil
 
 ![Save Response Body Disabled](../images/synthetics/response-body-disabled.png)
 
+## Bulk Adding HTTP Monitors
+
+When creating an HTTP Monitor, you can add multiple URLs at once. All configuration settings specified during the creation process will be applied to URLs added in bulk. To add URLs individually, click the '+ New Monitor' button for each one.
+
+![HTTP Add New Monitor](../images/synthetics/http-add-new-monitor.png)
+
+Alternatively, click the '+ Bulk Add' button. A pop-up will appear, allowing you to paste the list of URLs. Ensure each URL is separated by a new line within the pop-up. This enables you to add numerous endpoints for monitoring without the need to input each one individually.
+
+![HTTP Bulk Add Monitors](../images/synthetics/http-bulk-add-monitors.gif)
+
+
 ## Authentication
+
+To monitor pages protected by some form of authentication each monitor can be configured to use one of the following types of authentication.
+
+### Bearer / Access Token
 
 You can **dynamically fetch a token** for each run with token support and pass that token in your API requests. 
 
-When creating an HTTP monitor, navigate to the Authentication tab and select **Bearer/Access Token** authentication type.
+When creating an HTTP monitor, navigate to the Authentication tab and select **Bearer/Access Token** authentication option.
 
 ![Access Token Authentication](../images/synthetics/authentication-token.png)
 
-Enter the access token URL and the source field to get the token from response. Enter body parameters to fetch the token such as grant-type, username and password.
+Enter the access token URL and the source field to get the token from the response. Enter headers and body parameters to fetch the token such as `grant_type`, `username` and `password`. We currently support encoding the authentication request's body as `application/json` and `application/x-www-form-urlencoded`. 
 
 Before Sematext calls the endpoint, an access token will be fetched based on the parameters entered within this tab and it will be passed to the API request.
 
-You also have the option to select **Basic Authentication** type within the Authentication tab and pass username and password to connect your **protected APIs**. 
+### Basic Authentication
+
+You can select the **Basic Authentication** option within the Authentication tab and add the username and password needed to connect to your **protected APIs**. 
 
 ![Basic Authentication](../images/synthetics/authentication-basic.png)
 
-HTTP monitors also support header-based authentication. Custom HTTP request headers can be specified when creating a monitor. To use Basic authentication, add a custom request header according to the following specifications:
+### NTLM Authentication
+
+You can select the **NTLM Authentication** option within the Authentication tab and enter your credentials. Both NTLMv2 and NTLMv1 are supported.
+
+
+![NTLM Authentication](../images/synthetics/authentication-ntlm.png)
+
+You can also fill in the optional **Domain** and **Workstation** fields in the **Advanced Configuration** section, if those are required for your setup. If no advanced configuration is specified, default empty values will be auto-generated.
+
+### Header-based Authentication
+
+HTTP monitors also support header-based authentication. You can specify custom HTTP request headers when creating a monitor.
+
+For instance, if you need to monitor an endpoint using an API key, you can include it as a custom request header, like so:
+
+| Name | Value |
+| --- | --- |
+| `API_KEY` | `XYZ` |
+
+For Basic authentication using only headers, follow these specifications to add a custom request header:
 
 | Name | Value | Description |
 | --- | --- | --- |

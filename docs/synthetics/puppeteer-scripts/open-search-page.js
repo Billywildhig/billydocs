@@ -1,6 +1,8 @@
+const assert = require('assert');
+
 async function testPage(page) {
     await page.goto('https://duckduckgo.com/');
-    await page.type('#search_form_input_homepage', 'google');
+    await page.type('input[aria-label="Search with DuckDuckGo"]', 'google');
     await Promise.all([
         page.waitForNavigation({
             waitUntil: 'networkidle0',
@@ -8,8 +10,8 @@ async function testPage(page) {
         // press enter key
         page.keyboard.press(String.fromCharCode(13)),
     ]);
-    const link = await page.evaluate(() => document.querySelector('#r1-0 a').getAttribute('href'));
-    assert.equal(link, 'https://www.google.com/');
+    const link = await page.$('#r1-0 a[href="https://www.google.com/"]');
+    assert.notEqual(link, null);
 }
 
 module.exports = testPage;
